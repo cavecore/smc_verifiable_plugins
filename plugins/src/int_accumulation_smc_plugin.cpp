@@ -16,32 +16,41 @@
  */
 
 #include "int_accumulation_smc_plugin.hpp"
-#include "smc_verifiable_plugins/utils.hpp"
+
 #include <stdexcept>
 
-namespace smc_verifiable_plugins {
+#include "smc_verifiable_plugins/utils.hpp"
 
-IntAccumulationSmcPlugin::IntAccumulationSmcPlugin() : _input_label{"input_value"}, _output_label{"accumulated_value"} {};
+namespace smc_verifiable_plugins
+{
 
-IntAccumulationSmcPlugin::~IntAccumulationSmcPlugin(){};
+IntAccumulationSmcPlugin::IntAccumulationSmcPlugin()
+    : _input_label{"input_value"}, _output_label{"accumulated_value"} {};
 
-void IntAccumulationSmcPlugin::processInitParameters(const DataExchange& config) {
-    if (!config.empty()) {
-        throw std::invalid_argument("Invalid configuration provided. Expected no params.");
-    }
+IntAccumulationSmcPlugin::~IntAccumulationSmcPlugin() {};
+
+void IntAccumulationSmcPlugin::processInitParameters(const DataExchange& config)
+{
+  if (!config.empty())
+  {
+    throw std::invalid_argument("Invalid configuration provided. Expected no params.");
+  }
 };
 
-std::optional<DataExchange> IntAccumulationSmcPlugin::processReset() {
-    _current_state = 0U;
-    return std::make_optional<DataExchange>({{_output_label, _current_state}});
+std::optional<DataExchange> IntAccumulationSmcPlugin::processReset()
+{
+  _current_state = 0U;
+  return std::make_optional<DataExchange>({{_output_label, _current_state}});
 }
 
-std::optional<DataExchange> IntAccumulationSmcPlugin::processInputParameters(const DataExchange& input_data) {
-    if (input_data.size() != 1U && !input_data.contains(_input_label)) {
-        throw std::invalid_argument("Invalid input provided. Expected only one integer.");
-    }
-    _current_state += std::get<int64_t>(input_data.at(_input_label));
-    return std::make_optional<DataExchange>({{_output_label, _current_state}});
+std::optional<DataExchange> IntAccumulationSmcPlugin::processInputParameters(const DataExchange& input_data)
+{
+  if (input_data.size() != 1U && !input_data.contains(_input_label))
+  {
+    throw std::invalid_argument("Invalid input provided. Expected only one integer.");
+  }
+  _current_state += std::get<int64_t>(input_data.at(_input_label));
+  return std::make_optional<DataExchange>({{_output_label, _current_state}});
 }
 
 GENERATE_PLUGIN_LOADER(IntAccumulationSmcPlugin);

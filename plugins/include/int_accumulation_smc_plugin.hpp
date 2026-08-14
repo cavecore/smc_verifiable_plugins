@@ -15,45 +15,49 @@
  * limitations under the License.
  */
 #pragma once
-#include "smc_verifiable_plugins/smc_plugin_base.hpp"
 #include <vector>
 
-namespace smc_verifiable_plugins {
+#include "smc_verifiable_plugins/smc_plugin_base.hpp"
+
+namespace smc_verifiable_plugins
+{
 
 /*!
  * @brief Base class providing the minimum interface required by a plugin to work with SMC
  */
-class IntAccumulationSmcPlugin : public SmcPluginBase {
-  public:
-    IntAccumulationSmcPlugin();
+class IntAccumulationSmcPlugin : public SmcPluginBase
+{
+ public:
+  IntAccumulationSmcPlugin();
 
-    ~IntAccumulationSmcPlugin();
+  ~IntAccumulationSmcPlugin();
 
-    /*!
-     * @copydoc SmcPluginBase::getPluginName()
-     */
-    std::string getPluginName() const override {
-        return "int_accumulation_smc_plugin";
-    }
+  /*!
+   * @copydoc SmcPluginBase::getPluginName()
+   */
+  std::string getPluginName() const override
+  {
+    return "int_accumulation_smc_plugin";
+  }
 
-  private:
-    /*!
-     * @copydoc SmcPluginBase::processInitParameters(const DataExchange& config)
-     */
-    void processInitParameters(const DataExchange& config) override;
+ private:
+  /*!
+   * @copydoc SmcPluginBase::processInitParameters(const DataExchange& config)
+   */
+  void processInitParameters(const DataExchange& config) override;
 
-    /*!
-     * @copydoc SmcPluginBase::processReset()
-     */
-    std::optional<DataExchange> processReset() override;
+  /*!
+   * @copydoc SmcPluginBase::processReset()
+   */
+  std::optional<DataExchange> processReset() override;
 
-    /*!
-     * @copydoc SmcPluginBase::processInputParameters(const DataExchange& input_data)
-     */
-    std::optional<DataExchange> processInputParameters(const DataExchange& input_data) override;
+  /*!
+   * @copydoc SmcPluginBase::processInputParameters(const DataExchange& input_data)
+   */
+  std::optional<DataExchange> processInputParameters(const DataExchange& input_data) override;
 
-    int64_t _current_state = 0U;
-    const std::string _input_label;
-    const std::string _output_label;
+  int64_t _current_state = 0U;
+  const std::string _input_label;
+  const std::string _output_label;
 };
 }  // namespace smc_verifiable_plugins
