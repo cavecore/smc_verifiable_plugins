@@ -47,15 +47,7 @@ target_include_directories(int_accumulation_smc_plugin PUBLIC ${PLUGIN_INCLUDE_D
 include(CTest)
 
 if(BUILD_TESTING)
-  find_package(GTest REQUIRED)
-  # Copy the test files in the build folder
-  set(TEST_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
-  set(PLUGINS_DIR ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-
-  # Unit tests
-  add_executable(test_plugin_loading ${TEST_DIRECTORY}/test_plugin_loading.cpp)
-  target_link_libraries(test_plugin_loading ${PROJECT_NAME} GTest::gtest GTest::gtest_main)
-  gtest_add_tests(TARGET test_plugin_loading WORKING_DIRECTORY ${PLUGINS_DIR})
+  add_subdirectory(test)
 endif()
 
 
