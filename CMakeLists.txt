@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.12)
 
 # set the project name and version
 project(smc_verifiable_plugins VERSION 1.0)
