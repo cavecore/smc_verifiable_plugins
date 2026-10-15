@@ -51,23 +51,35 @@ inline std::filesystem::path generatePathToPlugin(const std::filesystem::path& p
  * @param plugin_folder The path to the folder containing the plugin library.
  * @param plugin_name The name of the plugin instance to load. The library name and the plugin name are expected to
  * match.
- * @return A unique_ptr containing an instance of the loaded plugin, or a nullptr if loading was not possible.
+ * @return A unique_ptr containing an instance of the loaded plugin.
+ * @throws std::invalid_argument if the library cannot be opened or getPlugin fails.
  */
-std::unique_ptr<SmcPluginBase> loadPlugin(const std::filesystem::path& plugin_folder, const std::string& plugin_name)
+inline std::unique_ptr<SmcPluginBase> loadPlugin(const std::filesystem::path& plugin_folder,
+                                                 const std::string& plugin_name)
 {
+  // dlopen
   const std::filesystem::path full_path = generatePathToPlugin(plugin_folder, plugin_name);
-  if (std::filesystem::exists(full_path))
+  void* handle = dlopen(full_path.c_str(), RTLD_NOW);
+  if (handle == nullptr)
   {
-    void* handle = dlopen(full_path.c_str(), RTLD_LAZY);
-    if (!handle)
-    {
-      std::stringstream dl_error_stream;
-      dl_error_stream << "Cannot open library: " << dlerror();
-      throw std::invalid_argument(dl_error_stream.str());
-    }
-    auto create_plugin_fun = (SmcPluginBase * (*)()) dlsym(handle, "getPlugin");
-    return std::unique_ptr<SmcPluginBase>(create_plugin_fun());
+    throw std::invalid_argument(std::string("Cannot open library: ") + dlerror());
   }
-  return nullptr;
+
+  // Probe getPlugin()
+  auto* create_plugin_fun = reinterpret_cast<SmcPluginBase* (*)()>(dlsym(handle, "getPlugin"));
+  if (create_plugin_fun == nullptr)
+  {
+    throw std::invalid_argument("Cannot load plugin '" + plugin_name + "' from " + full_path.string() +
+                                ": getPlugin is not exported");
+  }
+
+  // Call getPlugin()
+  std::unique_ptr<SmcPluginBase> plugin(create_plugin_fun());
+  if (plugin == nullptr)
+  {
+    throw std::invalid_argument("Cannot load plugin '" + plugin_name + "' from " + full_path.string() +
+                                ": getPlugin returned nullptr");
+  }
+  return plugin;
 }
 }  // namespace smc_verifiable_plugins
