@@ -41,7 +41,7 @@ namespace vector_matrix_exchange
 namespace detail
 {
 template <typename T>
-constexpr bool is_supported_element_v = std::is_same_v<T, int64_t> || std::is_same_v<T, double>;
+constexpr bool IS_SUPPORTED_ELEMENT_V = std::is_same_v<T, int64_t> || std::is_same_v<T, double>;
 
 inline std::string indexedKey(const std::string& base_name, const size_t i)
 {
@@ -103,7 +103,7 @@ void assignIfPresent(T& target, const DataExchange& in, const std::string& key, 
 template <typename T>
 void packVector(DataExchange& out, const std::string& base_name, const std::vector<T>& values)
 {
-  static_assert(detail::is_supported_element_v<T>, "packVector only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "packVector only supports int64_t or double elements.");
   for (size_t i = 0; i < values.size(); ++i)
   {
     out[detail::indexedKey(base_name, i)] = values[i];
@@ -119,7 +119,7 @@ template <typename T>
 void unpackVector(const DataExchange& in, const std::string& base_name, std::vector<T>& out,
                   const bool permissive = false)
 {
-  static_assert(detail::is_supported_element_v<T>, "unpackVector only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "unpackVector only supports int64_t or double elements.");
   for (size_t i = 0; i < out.size(); ++i)
   {
     detail::assignIfPresent(out[i], in, detail::indexedKey(base_name, i), permissive);
@@ -133,7 +133,7 @@ void unpackVector(const DataExchange& in, const std::string& base_name, std::vec
 template <typename T>
 void packMatrix(DataExchange& out, const std::string& base_name, const std::vector<std::vector<T>>& values)
 {
-  static_assert(detail::is_supported_element_v<T>, "packMatrix only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "packMatrix only supports int64_t or double elements.");
   const size_t n_cols = values.empty() ? 0U : values.front().size();
   for (size_t r = 0; r < values.size(); ++r)
   {
@@ -157,7 +157,7 @@ template <typename T>
 void unpackMatrix(const DataExchange& in, const std::string& base_name, std::vector<std::vector<T>>& out,
                   const bool permissive = false)
 {
-  static_assert(detail::is_supported_element_v<T>, "unpackMatrix only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "unpackMatrix only supports int64_t or double elements.");
   for (size_t r = 0; r < out.size(); ++r)
   {
     for (size_t c = 0; c < out[r].size(); ++c)
@@ -174,7 +174,7 @@ void unpackMatrix(const DataExchange& in, const std::string& base_name, std::vec
 template <typename T>
 void packUpperTriangular(DataExchange& out, const std::string& base_name, const std::vector<std::vector<T>>& values)
 {
-  static_assert(detail::is_supported_element_v<T>, "packUpperTriangular only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "packUpperTriangular only supports int64_t or double elements.");
   const size_t n = values.size();
   for (size_t r = 0; r < n; ++r)
   {
@@ -197,7 +197,7 @@ template <typename T>
 void unpackUpperTriangular(const DataExchange& in, const std::string& base_name, std::vector<std::vector<T>>& out,
                            const bool permissive = false)
 {
-  static_assert(detail::is_supported_element_v<T>, "unpackUpperTriangular only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "unpackUpperTriangular only supports int64_t or double elements.");
   const size_t n = out.size();
   for (size_t r = 0; r < n; ++r)
   {
@@ -215,7 +215,7 @@ void unpackUpperTriangular(const DataExchange& in, const std::string& base_name,
 template <typename T>
 void packLowerTriangular(DataExchange& out, const std::string& base_name, const std::vector<std::vector<T>>& values)
 {
-  static_assert(detail::is_supported_element_v<T>, "packLowerTriangular only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "packLowerTriangular only supports int64_t or double elements.");
   const size_t n = values.size();
   for (size_t r = 0; r < n; ++r)
   {
@@ -238,7 +238,7 @@ template <typename T>
 void unpackLowerTriangular(const DataExchange& in, const std::string& base_name, std::vector<std::vector<T>>& out,
                            const bool permissive = false)
 {
-  static_assert(detail::is_supported_element_v<T>, "unpackLowerTriangular only supports int64_t or double elements.");
+  static_assert(detail::IS_SUPPORTED_ELEMENT_V<T>, "unpackLowerTriangular only supports int64_t or double elements.");
   const size_t n = out.size();
   for (size_t r = 0; r < n; ++r)
   {
