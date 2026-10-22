@@ -7,9 +7,9 @@ repos:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
 -   repo: https://github.com/cpp-linter/cpp-linter-hooks
-    rev: v0.6.0
+    rev: v1.6.1
     hooks:
     -   id: clang-format
-        args: [--style=file, --version=14]
+        args: [--style=file, --version=22]
     -   id: clang-tidy
-        args: [--checks=.clang-tidy, -p=build, --version=14]
+        args: [--checks=.clang-tidy, -p=build, --version=22]
