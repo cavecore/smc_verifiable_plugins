@@ -18,6 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <filesystem>
+#include <stdexcept>
 
 #include "smc_verifiable_plugins/utils.hpp"
 
@@ -50,8 +51,7 @@ TEST(LoadIntAccumulator, TestPluginLoader)
 TEST(LoadWrongPath, TestPluginLoader)
 {
   const std::string plugin_name = "a_fake_plugin";
-  const auto plugin_ptr = smc_verifiable_plugins::loadPlugin(std::filesystem::current_path(), plugin_name);
-  EXPECT_EQ(plugin_ptr, nullptr);
+  EXPECT_THROW(smc_verifiable_plugins::loadPlugin(std::filesystem::current_path(), plugin_name), std::invalid_argument);
 }
 
 int main(int argc, char** argv)
